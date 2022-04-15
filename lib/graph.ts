@@ -129,4 +129,37 @@ export class Graph {
     path = path.concat(lastEdge);
     return path;
   }
+
+  private _breadthFirstSearch(start: string, end: string, path: string[]) {
+    let currentStepNodes = [start];
+    while (currentStepNodes.length > 0) {
+      for (const node of currentStepNodes) {
+        path.push(node);
+      }
+      currentStepNodes = currentStepNodes.flatMap((node) =>
+        this.getNeighbors(node).map((edge) => edge.destination)
+      );
+    }
+    return path;
+  }
+
+  breadthFirstSearch(start: string, end: string) {
+    return this._breadthFirstSearch(start, end, []);
+  }
+
+  private _depthFirstSearch(start: string, end: string, path: string[]) {
+    // console.log(start, this.getNeighbors(start).map((x) => x.destination).join());
+
+    path.push(start);
+    for (const node of this.getNeighbors(start).map(
+      (edge) => edge.destination
+    )) {
+      this._depthFirstSearch(node, end, path);
+    }
+    return path;
+  }
+
+  depthFirstSearch(start: string, end: string) {
+    return this._depthFirstSearch(start, end, []);
+  }
 }
